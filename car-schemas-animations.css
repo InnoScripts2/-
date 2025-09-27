@@ -1,0 +1,50 @@
+/* car-schemas-animations.css
+   Анимированные SVG-схемы типов кузова: хэтчбек, седан, минивэн.
+   Фокус: плавное прорисовывание контура, бегущая точка, интерактивные состояния. */
+
+.car-selection-grid { display:grid; gap:32px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); max-width:960px; margin:0 auto; }
+@media (max-width:768px){ .car-selection-grid { grid-template-columns:1fr; } }
+
+.car-card { background:#fff; border:2px solid var(--c-border, #e2e8f0); border-radius:16px; padding:20px 20px 18px; display:flex; flex-direction:column; gap:12px; align-items:center; text-align:center; cursor:pointer; position:relative; transition:border-color .28s var(--ease, cubic-bezier(.4,0,.2,1)), box-shadow .28s var(--ease, cubic-bezier(.4,0,.2,1)), transform .28s var(--ease, cubic-bezier(.4,0,.2,1)); }
+.car-card:focus-visible { outline:3px solid var(--c-accent,#3b82f6); outline-offset:3px; }
+.car-card:hover { border-color:var(--c-accent,#3b82f6); box-shadow:0 4px 12px rgba(15,23,42,0.12); }
+.car-card:active { transform:translateY(2px); }
+.car-card[aria-pressed="true"] { border-color:var(--c-accent,#3b82f6); box-shadow:0 0 0 3px rgba(59,130,246,.25); }
+
+.car-card__svg-wrap { width:100%; display:flex; justify-content:center; align-items:center; }
+.car-svg { overflow:visible; width:100%; height:auto; }
+
+/* Контур — эффект прорисовки */
+.car-outline { fill:none; stroke:#0f5fbf; stroke-width:2.2; stroke-linejoin:round; stroke-linecap:round; stroke-dasharray:1000; stroke-dashoffset:1000; animation:draw-car 2.2s ease-out forwards; filter: drop-shadow(0 2px 4px rgba(15,23,42,0.12)); }
+.car-card:nth-child(2) .car-outline { animation-duration:2.6s; }
+.car-card:nth-child(3) .car-outline { animation-duration:3s; }
+
+@keyframes draw-car { to { stroke-dashoffset:0; } }
+
+/* Бегущая точка по контуру */
+.car-point { filter: drop-shadow(0 0 6px rgba(59,130,246,.6)); }
+
+/* Мета */
+.car-card__title { font-size:18px; font-weight:600; letter-spacing:-0.01em; }
+.car-card__desc { display:block; margin-top:2px; color:var(--c-text-sec,#64748b); }
+.car-card__price { font-size:20px; font-weight:600; color:var(--c-accent,#3b82f6); margin-top:6px; letter-spacing:-0.01em; }
+
+/* Интерактивные состояния (glow) */
+.car-card:hover .car-outline { stroke:#2563eb; filter: drop-shadow(0 0 8px rgba(37,99,235,0.55)); }
+.car-card[aria-pressed="true"] .car-outline { stroke:#1d4ed8; filter: drop-shadow(0 0 10px rgba(29,78,216,0.65)); }
+
+/* Выбор — галочка */
+.car-card[aria-pressed="true"]::after { content:""; position:absolute; top:10px; right:10px; width:20px; height:20px; border-radius:50%; background:var(--c-success,#10b981); box-shadow:0 0 0 3px rgba(16,185,129,0.35); display:grid; place-items:center; }
+.car-card[aria-pressed="true"]::before { content:"✔"; position:absolute; top:10px; right:10px; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#fff; z-index:1; }
+
+/* Адаптация тёмной темы */
+.dark .car-card { background:var(--c-surface,#1e293b); }
+.dark .car-outline { stroke:#5b9df4; }
+.dark .car-card:hover .car-outline { stroke:#82b6ff; }
+.dark .car-card[aria-pressed="true"] .car-outline { stroke:#93c5fd; }
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce){
+  .car-outline { animation: none; stroke-dashoffset:0; }
+  .car-point animateMotion { display:none; }
+}

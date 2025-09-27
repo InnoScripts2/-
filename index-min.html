@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ru" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <title>Автодиагностика Терминал — Минимал</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/kiosk-min.css" />
+  <style>html.no-js .js-only{display:none!important}</style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Пропустить к содержимому</a>
+  <div class="app-shell" id="app">
+    <div class="bg-lines" id="bgLines" aria-hidden="true"></div>
+    <!-- (Удалён overlay эффекта "дыра" по откату) -->
+
+    <!-- Idle Screen -->
+    <section class="page page--active" id="page-idle" data-page>
+      <div class="idle-screen idle-screen--plain page__inner">
+  <h1 class="floating-title floating-title--calm floating-title--accent">
+          <span class="ft-line">АВТОМОБИЛЬНАЯ</span>
+          <span class="ft-line">ДИАГНОСТИКА</span>
+        </h1>
+        <div class="touch-instruction">Нажмите в любую точку для начала</div>
+      </div>
+    </section>
+
+    <!-- Welcome Screen -->
+    <section class="page" id="page-welcome" data-page>
+      <div class="page__inner" id="main">
+  <header class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 40px">Добро пожаловать</header>
+  <div class="rich-text rich-text--rect soft rich-text--dense" id="welcomeText"></div>
+        <div class="welcome-actions">
+          <div class="welcome-agreement">
+            <label class="checkbox checkbox--large" id="agreeBox">
+              <span class="checkbox__box" aria-hidden="true"></span>
+              <span class="checkbox__label">С условиями ознакомлен</span>
+            </label>
+            <p class="welcome-agreement__hint">Поставьте отметку, чтобы подтвердить, что ознакомились с условиями сервиса.</p>
+          </div>
+          <button class="btn btn--wide btn--xl btn--welcome" id="btnContinue" disabled>Продолжить</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Service Selection -->
+    <section class="page" id="page-services" data-page>
+      <div class="page__inner">
+  <h2 class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 48px">Выберите услугу</h2>
+  <div class="cards-grid" id="servicesGrid">
+          <div class="service-card" data-service="thickness" tabindex="0">
+            <div class="service-card__icon has-img" aria-hidden="true"><img src="Рекомендации/Иконка измерительного прибора для замены эмодзи в карточке ТОЛЩИНОМЕР/b570b118-027b-45a4-9f5f-724473642e04.png" alt="Толщиномер" /></div>
+            <div class="service-card__title">ТОЛЩИНОМЕР</div>
+            <div class="service-card__price">От 300 ₽</div>
+            <ul class="service-card__features">
+              <li>Точность измерений</li>
+              <li>Автоматический расчет</li>
+              <li>Подробный отчет</li>
+            </ul>
+            <button class="btn w-100 service-cta">Выбрать</button>
+          </div>
+          <div class="service-card" data-service="diagnostic" tabindex="0">
+            <div class="badge-popular">ПОПУЛЯРНО</div>
+            <div class="service-card__icon has-img" aria-hidden="true"><img src="Рекомендации/Иконка диагностического сканера для карточки ДИАГНОСТИКА/18aaf353-a739-4fea-9392-e7ee8e8e14a2.png" alt="Диагностика" /></div>
+            <div class="service-card__title">ДИАГНОСТИКА</div>
+            <div class="service-card__price">480 ₽</div>
+            <ul class="service-card__features">
+              <li>Сканирование систем</li>
+              <li>Коды ошибок</li>
+              <li>Рекомендации</li>
+            </ul>
+            <button class="btn w-100 service-cta">Выбрать</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Thickness Instructions + Tariffs + Contacts -->
+    <section class="page" id="page-thickness-setup" data-page>
+      <div class="page__inner">
+  <h2 class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 36px">Подготовка измерения</h2>
+  <div class="rich-text rich-text--rect soft rich-text--dense max-600" id="thicknessInstr"></div>
+        <h3 class="h2 text-center" style="margin:40px 0 8px">Выбор типа кузова</h3>
+        <div class="tariffs" id="tariffGrid">
+          <div class="tariff" data-tariff="hatchback"><strong>ХЭТЧБЕК</strong><span class="tariff__price">300 ₽</span><span class="caption">Компактные авто</span></div>
+          <div class="tariff" data-tariff="sedan"><strong>СЕДАН</strong><span class="tariff__price">300 ₽</span><span class="caption">Классические</span></div>
+          <div class="tariff" data-tariff="minivan"><strong>МИНИВЭН</strong><span class="tariff__price">350 ₽</span><span class="caption">Большой кузов</span></div>
+        </div>
+        <div class="car-visual" id="carVisual" aria-live="polite" style="margin-top:32px">
+          <!-- Хэтчбек -->
+          <figure class="car-visual__item" data-car="hatchback" hidden>
+            <div class="car-visual__wrap">
+              <img class="car-visual__img" src="хэтчбек.webp" alt="Хэтчбек" loading="lazy" />
+            </div>
+            <figcaption class="caption text-center">Хэтчбек</figcaption>
+          </figure>
+          <!-- Седан -->
+          <figure class="car-visual__item" data-car="sedan" hidden>
+            <div class="car-visual__wrap">
+              <img class="car-visual__img" src="седан.png" alt="Седан" loading="lazy" />
+            </div>
+            <figcaption class="caption text-center">Седан</figcaption>
+          </figure>
+          <!-- Минивэн -->
+          <figure class="car-visual__item" data-car="minivan" hidden>
+            <div class="car-visual__wrap">
+              <img class="car-visual__img" src="минивен.png" alt="Минивэн" loading="lazy" />
+            </div>
+            <figcaption class="caption text-center">Минивэн</figcaption>
+          </figure>
+        </div>
+        <div class="inline-fields">
+          <div class="form-row" style="flex:1 1 240px">
+            <label class="label" for="phoneInput">Телефон</label>
+            <input id="phoneInput" class="input" type="tel" placeholder="+7 (___) ___-__-__" autocomplete="off" inputmode="tel" />
+            <div class="field-msg small" id="phoneMsg"></div>
+          </div>
+          <div class="form-row" style="flex:1 1 240px">
+            <label class="label" for="emailInput">Email</label>
+            <input id="emailInput" class="input" type="email" placeholder="you@mail.ru" autocomplete="off" />
+            <div class="field-msg small" id="emailMsg"></div>
+          </div>
+        </div>
+        <div style="margin-top:32px;display:flex;justify-content:center;gap:24px">
+          <button class="btn btn--secondary" id="btnBackToServices">Назад</button>
+          <button class="btn btn--wide" id="btnToPayment" disabled>Перейти к оплате</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Diagnostic Intro -->
+    <section class="page" id="page-diag-intro" data-page>
+      <div class="page__inner">
+  <h2 class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 32px">Диагностика — ввод</h2>
+        <div class="rich-text rich-text--rect soft rich-text--dense max-600" id="diagIntro"></div>
+        <div style="margin-top:32px;display:flex;justify-content:center;gap:24px">
+          <button class="btn btn--secondary" onclick="show('services')">Назад</button>
+          <button class="btn btn--wide" onclick="beginAdapterConnect()">Начать подключение</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Adapter Connect -->
+    <section class="page" id="page-diag-connect" data-page>
+      <div class="page__inner center flex-col" style="gap:32px;min-height:100%">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="h2" id="connectStatus">Подготовка...</div>
+        <div class="small muted">Не отключайте питание</div>
+      </div>
+    </section>
+
+    <!-- Scanning Modules -->
+    <section class="page" id="page-diag-scan" data-page>
+      <div class="page__inner">
+  <h2 class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 24px">Сканирование модулей</h2>
+        <div id="scanList" class="scan-list" aria-live="polite"></div>
+        <div class="small muted text-center" style="margin-top:24px">Выполняется чтение кодов неисправностей...</div>
+      </div>
+    </section>
+
+    <!-- Diagnostic Results -->
+    <section class="page" id="page-diag-results" data-page>
+      <div class="page__inner">
+  <h2 class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 24px">Результаты диагностики</h2>
+        <div class="diag-summary" style="margin:0 0 32px">
+          <div class="rich-text rich-text--rect soft rich-text--dense" id="diagResultsInfo"></div>
+          <figure class="diag-summary__figure">
+            <img src="/Рекомендации/CCS%20рекомендации/f104a8f8-c5b6-4e81-957f-050d57bc4a4f.png" alt="Схематичное изображение двигателя">
+          </figure>
+        </div>
+        <div class="table-wrap" style="margin-bottom:32px">
+          <table class="table" id="diagCodes">
+            <thead><tr><th>Модуль</th><th>Код</th><th>Описание</th><th>Уровень</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <h3 class="h2" style="margin:0 0 16px">Рекомендации</h3>
+        <div id="diagRecs" class="recs"></div>
+        <div style="margin-top:40px;display:flex;justify-content:center;gap:24px">
+          <button class="btn btn--secondary" onclick="show('services')">Завершить</button>
+          <button class="btn btn--wide report-btn" onclick="goToReportFromDiag()">Получить отчет</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment Screen -->
+    <section class="page" id="page-payment" data-page>
+      <div class="page__inner">
+  <h2 class="h1 page-title page-title--accent page-title--calm text-center" style="margin:0 0 40px">Оплата услуги</h2>
+        <div class="rich-text rich-text--rect soft rich-text--dense max-600" id="paymentInfo" style="margin:0 0 40px"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:48px;justify-content:center;align-items:flex-start">
+          <div class="summary" id="orderSummary"></div>
+          <div class="qr-box qr-box--loading" id="qrBox" aria-label="QR код для оплаты" role="img"></div>
+        </div>
+        <div class="payment-status" id="paymentStatus" data-state="waiting">⏳ Ожидание оплаты через QR-код</div>
+      </div>
+    </section>
+
+    <!-- Measurement Progress Placeholder -->
+    <section class="page" id="page-measure" data-page>
+      <div class="page__inner center flex-col" style="gap:32px;min-height:100%">
+        <div class="rich-text rich-text--rect soft rich-text--dense max-600" id="measureInfo"></div>
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="h2">Подготовка оборудования...</div>
+        <div class="progress"><div class="progress__bar" id="measureProgress"></div></div>
+        <div class="small muted" id="measureLabel">Измерение 0 / 0</div>
+      </div>
+    </section>
+
+    <!-- Results Screen -->
+    <section class="page" id="page-results" data-page>
+      <div class="page__inner">
+        <div class="results-shell">
+          <div class="results-panel">
+            <header class="results-panel__head">
+              <div>
+                <h2 class="h1 page-title page-title--accent page-title--calm">Результаты измерений</h2>
+                <p class="results-panel__sub">Сводка измерений лакокрасочного покрытия по ключевым элементам кузова</p>
+              </div>
+              <span class="results-panel__badge" id="resultsBadge">Стабильное состояние</span>
+            </header>
+            <div class="result-insights" id="resultsHighlights" aria-live="polite"></div>
+            <div class="results-panel__body">
+              <div class="rich-text rich-text--rect soft rich-text--dense" id="thicknessResultsInfo"></div>
+              <div class="table-wrap">
+                <table class="table" id="resultsTable">
+                  <thead><tr><th>Элемент</th><th>Толщина</th><th>Норма</th><th>Статус</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="results-panel__actions">
+              <button class="btn report-btn" id="btnReport">Получить подробный отчет</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Thank You -->
+    <section class="page" id="page-thankyou" data-page>
+      <div class="page__inner flex flex-col center" style="min-height:100%;">
+        <div class="rich-text rich-text--rect soft rich-text--dense max-600" id="thankyouInfo"></div>
+        <div class="countdown" id="countdown" aria-hidden="true"></div>
+      </div>
+    </section>
+
+  </div>
+  <div class="notice-stack" id="noticeStack" aria-live="polite"></div>
+
+  <script>
+  document.documentElement.classList.remove('no-js');
+
+  /* ================= Animated Technical Line Background ================= */
+  // Новая версия: интерактивная сеть точек на canvas (адаптация предоставленного примера)
+  (function(){
+    const root = document.getElementById('bgLines');
+    if(!root) return;
+    // Очищаем прежнее содержимое (SVG кластеры) и вставляем canvas
+    root.innerHTML = '<canvas id="bgNetwork" aria-hidden="true"></canvas>';
+    const canvas = root.querySelector('#bgNetwork');
+    const ctx = canvas.getContext('2d');
+
+  let width, height, points=[], animateHeader=true;
+  const GRID_DIV = 22;           // увеличен шаг (18->22) ещё ~20% меньше точек
+  const CLOSEST = 5;             // число соседей для соединений
+  const OP_LINE = 0.085;         // базовая непрозрачность линий (0.1 * 0.85)
+  const OP_POINT = 0.255;        // базовая непрозрачность точек (0.3 * 0.85)
+
+    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resize(){
+      width = window.innerWidth; height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
+  // центр больше не используется для активации
+    }
+
+    function buildPoints(){
+      points = [];
+      for(let x=0; x<width; x += width/GRID_DIV){
+        for(let y=0; y<height; y += height/GRID_DIV){
+          const px = x + Math.random()*width/GRID_DIV;
+            const py = y + Math.random()*height/GRID_DIV;
+            points.push({x:px, originX:px, y:py, originY:py});
+        }
+      }
+      // ищем соседей
+      for(let i=0;i<points.length;i++){
+        const p1=points[i];
+        const closest=[];
+        for(let j=0;j<points.length;j++) if(i!==j){
+          const p2=points[j];
+          if(closest.length < CLOSEST){ closest.push(p2); continue; }
+          // найдём наиболее дальний в массиве closest
+          let maxIdx=0; let maxDist=-1;
+          for(let k=0;k<closest.length;k++){ const d=dist2(p1,closest[k]); if(d>maxDist){maxDist=d; maxIdx=k;} }
+          if(dist2(p1,p2) < maxDist) closest[maxIdx]=p2;
+        }
+        p1.closest = closest;
+        p1.radius = 2 + Math.random()*2;
+      }
+    }
+
+    function shiftPoint(p){
+      if(prefersReduce) return; // без анимации при reduced motion
+      const dur = 1 + Math.random();
+      const nx = p.originX - 50 + Math.random()*100;
+      const ny = p.originY - 50 + Math.random()*100;
+      const startX = p.x, startY = p.y; const start = performance.now();
+      const ease = t=> 1 - Math.pow(1 - t, 2); // простое easeOutQuad вместо circ
+      function tick(now){
+        let k = (now-start)/(dur*1000); if(k>1) k=1;
+        const e = ease(k);
+        p.x = startX + (nx-startX)*e;
+        p.y = startY + (ny-startY)*e;
+        if(k<1){ requestAnimationFrame(tick); } else { shiftPoint(p); }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function animate(){
+      if(animateHeader){
+        ctx.clearRect(0,0,width,height);
+        for(let i=0;i<points.length;i++){
+          const p=points[i];
+          // Простая постоянная прозрачность (еффект втягивания удалён)
+          p.active = OP_LINE;
+          p.circleActive = OP_POINT;
+          drawLines(p);
+          drawCircle(p);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    function drawLines(p){
+      ctx.strokeStyle = 'rgba(156,217,249,'+p.active+')';
+      for(let i=0;i<p.closest.length;i++){
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        const c = p.closest[i];
+        ctx.lineTo(c.x, c.y);
+        ctx.stroke();
+      }
+    }
+    function drawCircle(p){
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(156,217,249,'+p.circleActive+')';
+      ctx.fill();
+    }
+    function dist2(a,b){ return (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y); }
+
+    // Убрана реакция на курсор; фон статичен по интенсивности
+    function scrollCheck(){ animateHeader = document.documentElement.scrollTop <= height; }
+
+    function init(){
+      resize();
+      buildPoints();
+      points.forEach(p=>shiftPoint(p));
+    }
+
+    window.addEventListener('resize',()=>{ resize(); buildPoints(); points.forEach(p=>shiftPoint(p)); });
+  // mousemove удалён по требованиям
+    window.addEventListener('scroll',scrollCheck,{passive:true});
+
+    // (Удалён API втягивания сети)
+
+    init();
+    animate();
+  })();
+  /* ================= /Animated Technical Line Background ================= */
+
+  const PAGES = [ 'idle','welcome','services','thickness-setup','diag-intro','diag-connect','diag-scan','diag-results','payment','measure','results','thankyou' ];
+  function show(id){
+    document.querySelectorAll('[data-page]').forEach(p=>p.classList.remove('page--active'));
+    const el=document.getElementById('page-'+id); if(el){ el.classList.add('page--active'); el.scrollTop=0; }
+    // При активации страницы запускаем отложенную анимацию элементов сеток
+    requestAnimationFrame(()=>{
+      if(!el) return;
+      // сервисные карточки
+      const svc = el.querySelector('.cards-grid');
+      if(svc && !svc.dataset.animated){
+        const items = svc.querySelectorAll('.service-card');
+        items.forEach((card,i)=>{ card.style.opacity='0'; card.style.animation='fade-scale .7s var(--ease) forwards'; card.style.animationDelay = (120 + i*90)+'ms'; });
+        svc.dataset.animated='1';
+      }
+      // тарифы
+      const tariffsWrap = el.querySelector('.tariffs');
+      if(tariffsWrap && !tariffsWrap.dataset.animated){
+        const tItems=tariffsWrap.querySelectorAll('.tariff');
+        tItems.forEach((t,i)=>{ t.style.opacity='0'; t.style.animation='fade-scale .6s var(--ease) forwards'; t.style.animationDelay=(100 + i*80)+'ms'; });
+        tariffsWrap.dataset.animated='1';
+      }
+    });
+  }
+
+  /* Idle → Welcome */
+  document.getElementById('page-idle').addEventListener('pointerdown',()=>{
+    if(window.__idleTransition) return; window.__idleTransition=true;
+    setTimeout(()=>show('welcome'),250);
+  });
+
+  /* Расширенный рекламно-приветственный блок (прямоугольный выровненный текст) */
+  const welcomeSentences = [
+    'Добро пожаловать в автономный терминал профессиональной авто-диагностики — умный сервис, который доступен всегда и работает для вас даже ночью.',
+    'Здесь вы за считанные минуты получаете то, что обычно требует очередей и ожидания в сервисе: точные измерения лакокрасочного покрытия и глубокое сканирование электронных систем.',
+    'Мы используем откалиброванное оборудование: результаты сравнимы с дилерским уровнем, но процесс проще и прозрачнее.',
+    'Толщиномер мгновенно выявляет перекрасы, шпатлёвку и скрытые следы кузовного ремонта — честная база для покупки или оценки состояния вашего авто.',
+    'Компьютерная диагностика считывает ключевые блоки: двигатель, коробку, ABS, подушки безопасности, электронику кузова и вспомогательные системы.',
+    'Система аккуратно классифицирует коды — критично, важно, информационно — чтобы вы сразу понимали приоритет действий.',
+    'Мы оформляем результаты в компактный структурированный отчет: значения, расшифровка, цветовые метки, краткие рекомендации без лишней «воды».',
+    'Оплата — моментально через QR. После подтверждения всё стартует автоматически: никакой ручной настройки, всё уже готово.',
+    'Ваши контактные данные нужны только для отправки отчёта — мы не собираем лишнего и не передаём третьим сторонам.',
+    'Интерфейс построен пошагово: удобно, понятно, без терминов, которые пугают неподготовленных пользователей.',
+    'Если раньше подобные процедуры казались сложными — здесь они превращены в ясный сценарий: выбрали → оплатили → получили результат.',
+    'Экономите время, снижаете риски неожиданных расходов и укрепляете уверенность в состоянии автомобиля — приятное чувство, правда?',
+    'Мы искренне радуемся каждому пользователю, который уходит с ясной картиной состояния своей машины.',
+    'Нажмите «Продолжить» — и через пару минут вы уже будете на шаг впереди проблем, которые не застигнут вас внезапно.'
+  ];
+  const welcomeBox = document.getElementById('welcomeText');
+  welcomeSentences.forEach((s,i)=>{ const p=document.createElement('p'); p.textContent=s; p.style.setProperty('--i',i); welcomeBox.appendChild(p); });
+  // Дополнительные семантические классы для визуальной иерархии
+  const wParas = welcomeBox.querySelectorAll('p');
+  if(wParas.length){
+    wParas[0].classList.add('rt-lead','rt-divider-after');
+    const midIndex = Math.floor(wParas.length/2);
+    if(wParas[midIndex]) wParas[midIndex].classList.add('rt-divider-after');
+    wParas[wParas.length-1].classList.add('rt-final');
+    // Чередование симметрии (лево/право)
+  }
+
+  /* Agreement */
+  const agreeBox = document.getElementById('agreeBox');
+  const btnContinue = document.getElementById('btnContinue');
+  let agreed=false;
+  agreeBox.addEventListener('click',()=>{agreed=!agreed;agreeBox.classList.toggle('is-checked',agreed);btnContinue.disabled=!agreed;});
+
+  btnContinue.addEventListener('click',()=>{ show('services'); });
+
+  /* Service selection */
+  let serviceType=null;
+  document.getElementById('servicesGrid').addEventListener('click',e=>{
+    const card=e.target.closest('.service-card'); if(!card) return;
+    document.querySelectorAll('.service-card').forEach(c=>c.classList.remove('is-selected'));
+    card.classList.add('is-selected'); serviceType=card.dataset.service;
+    if(serviceType==='thickness'){
+      setTimeout(()=>show('thickness-setup'),180);
+    } else if(serviceType==='diagnostic') {
+      startDiagnosticFlow();
+    }
+  });
+
+  /* ---------------- Диагностика поток ---------------- */
+  function startDiagnosticFlow(){
+    buildDiagnosticIntro();
+    show('diag-intro');
+  }
+
+  function buildDiagnosticIntro(){
+    const box=document.getElementById('diagIntro'); if(!box || box.dataset.ready) return;
+    populateRichText(box, diagIntroText);
+    box.dataset.ready='1';
+  }
+
+  /* Подключение адаптера */
+  function beginAdapterConnect(){
+    show('diag-connect');
+    const status=document.getElementById('connectStatus');
+    status.textContent='Поиск адаптера...';
+    setTimeout(()=>{ status.textContent='Установление связи с ECU...';
+      setTimeout(()=>{ status.textContent='Соединение успешно'; notify('success','Адаптер подключен'); setTimeout(()=>startModuleScan(),600); }, 1400);
+    }, 1200);
+  }
+
+  /* Сканирование модулей */
+  let diagResults=[];
+  function startModuleScan(){
+    show('diag-scan');
+    const list=document.getElementById('scanList'); list.innerHTML='';
+    const modules=[
+      {name:'Engine (ECM)', codes:['P0171','P0420']},
+      {name:'Transmission (TCM)', codes:[]},
+      {name:'ABS', codes:['C0035']},
+      {name:'Airbag (SRS)', codes:[]},
+      {name:'Body Control (BCM)', codes:['B0028','B1201']},
+      {name:'IMMOBILIZER', codes:[]}
+    ];
+    diagResults=[];
+    let i=0;
+    function step(){
+      if(i>=modules.length){ setTimeout(()=>buildDiagnosticResults(),600); return; }
+      const m=modules[i++];
+      const row=document.createElement('div'); row.className='scan-row';
+      row.innerHTML='<span class="scan-row__name">'+m.name+'</span><span class="scan-row__status">Сканирование...</span>';
+      list.appendChild(row);
+      setTimeout(()=>{
+        const statusEl=row.querySelector('.scan-row__status');
+        if(m.codes.length){
+          statusEl.innerHTML='<span class="status-chip status-chip--warn">Найдены коды: '+m.codes.length+'</span>';
+          m.codes.forEach(c=>diagResults.push({module:m.name, code:c}));
+        } else {
+          statusEl.innerHTML='<span class="status-chip status-chip--ok">OK</span>';
+        }
+        step();
+      }, 900 + Math.random()*400);
+    }
+    step();
+  }
+
+  function buildDiagnosticResults(){
+    show('diag-results');
+    fillDiagResultsInfo();
+    const tbody=document.querySelector('#diagCodes tbody'); tbody.innerHTML='';
+    if(!diagResults.length){
+      const tr=document.createElement('tr'); tr.innerHTML='<td colspan="4" class="text-center muted">Ошибок не обнаружено</td>'; tbody.appendChild(tr);
+      return;
+    }
+    const codeMeta={
+      'P0171':{level:'warn', desc:'Обедненная смесь (Bank 1)', rec:'Проверить подсос воздуха, датчик MAF, давление топлива.'},
+      'P0420':{level:'warn', desc:'Эффективность нейтрализатора ниже порога', rec:'Проверить состояние катализатора, датчики O2.'},
+      'C0035':{level:'warn', desc:'Датчик скорости колеса (передн. лев.)', rec:'Проверить датчик ABS и проводку.'},
+      'B0028':{level:'err', desc:'Система SRS: цепь боковой подушки', rec:'Диагностика модуля SRS, соединителей.'},
+      'B1201':{level:'info', desc:'BCM: низкий уровень напряжения сохранён', rec:'Проверить аккумулятор/клеммы.'}
+    };
+    diagResults.forEach(r=>{
+      const meta=codeMeta[r.code]||{level:'info', desc:'Описание не найдено', rec:'Требуется уточнение'};
+      const tr=document.createElement('tr');
+      const map={ok:'status-chip--ok',warn:'status-chip--warn',err:'status-chip--err',info:'status-chip'};
+      tr.innerHTML='<td>'+r.module+'</td><td>'+r.code+'</td><td>'+meta.desc+'</td><td><span class="status-chip '+map[meta.level]+'">'+(meta.level==='err'?'Критично':meta.level==='warn'?'Важно':meta.level==='info'?'Инфо':'ОК')+'</span></td>';
+      tbody.appendChild(tr);
+    });
+    buildRecommendations();
+  }
+
+  function buildRecommendations(){
+    const box=document.getElementById('diagRecs'); box.innerHTML='';
+    if(!diagResults.length){ box.innerHTML='<p class="muted">Нет активных кодов — вмешательство не требуется.</p>'; return; }
+    const grouped={};
+    diagResults.forEach(r=>{ (grouped[r.code]=grouped[r.code]||[]).push(r); });
+    Object.keys(grouped).forEach(code=>{
+      const item=document.createElement('div'); item.className='rec-item';
+      item.innerHTML='<div class="rec-item__code">'+code+'</div><div class="rec-item__text"></div>';
+      const metaBox=item.querySelector('.rec-item__text');
+      metaBox.textContent=document.querySelector('#diagCodes tbody tr td:nth-child(3)')?'' : '';
+      // Simplified pull from codeMeta again
+      // (In real case we would refactor)
+      // Reconstruct meta
+      const codeMetaLocal={
+        'P0171':'Проверить подсос воздуха, датчик MAF, давление топлива.',
+        'P0420':'Проверить катализатор и датчики кислорода.',
+        'C0035':'Осмотреть датчик ABS и жгут.',
+        'B0028':'Диагностика цепи боковой подушки безопасности.',
+        'B1201':'Проверка состояния аккумулятора.'
+      };
+      metaBox.textContent=codeMetaLocal[code]||'Рекомендация требует уточнения.';
+      box.appendChild(item);
+    });
+  }
+
+  function goToReportFromDiag(){
+    notify('success','Отчет сформирован и отправлен');
+    show('thankyou');
+    startCountdown();
+  }
+
+  /* Thickness instructions (15 sentences) */
+  const thicknessText = [
+    'Этот модуль выполняет интеллектуальное построение карты измерений — точки выбираются так, чтобы охватить ключевые панели и выявить локальные аномалии.',
+    'Вам не нужно гадать куда прикладывать датчик: интерфейс последовательно подскажет элементы и подтвердит корректный контакт.',
+    'Несколько замеров на один элемент устраняют случайность и формируют усреднённое значение для объективной картины.',
+    'Алгоритм автоматически помечает зоны с отклонениями от типового заводского диапазона — вы сразу видите, где стоит внимательнее присмотреться.',
+    'Цветовая индикация: зелёный — норма, жёлтый — возможный ремонт/подкраска, оранжево-красный — высокий риск шпаклевки или серьёзного вмешательства.',
+    'Результаты группируются по элементам: диапазон, среднее значение, экстремум и статус — удобно для дальнейшей перепродажи или торга.',
+    'Полный цикл обычно укладывается в 10–15 минут даже для крупного кузова — быстрее, чем ожидание мастера в сервисе.',
+    'Формируем отчёт в структурированном виде: таблица, визуальные маркеры, перечень потенциальных зон ремонтного воздействия.',
+    'Фиксированная стоимость исключает сюрпризы и мелкие доплаты за «дополнительные панели».',
+    'После оплаты оборудование сразу готово — без прогревов и «инициализаций».',
+    'Получив объективные цифры, вы чувствуете приятную уверенность — решение принимается рационально, а не на ощущениях.',
+    'Если готовы перейти к выбору кузова — выберите соответствующий тип и заполните контакты для отправки отчёта.'
+  ];
+  const thicknessInstrEl = document.getElementById('thicknessInstr');
+  thicknessText.forEach((s,i)=>{ const p=document.createElement('p'); p.textContent=s; p.style.setProperty('--i',i); thicknessInstrEl.appendChild(p); });
+
+  // Универсальная функция заполнения прямоугольных rich-text блоков
+  function populateRichText(container, lines){
+    container.innerHTML='';
+    lines.forEach((t,i)=>{ const p=document.createElement('p'); p.textContent=t; p.style.setProperty('--i',i); container.appendChild(p); });
+    const ps=container.querySelectorAll('p'); if(ps.length){
+      ps[0].classList.add('rt-lead','rt-divider-after');
+      if(ps.length>4){ const mid=Math.floor(ps.length/2); ps[mid].classList.add('rt-divider-after'); }
+      ps[ps.length-1].classList.add('rt-final');
+    }
+  }
+
+  // Убрана функция постсимвольной анимации заголовков (spanize) из-за проблем с исчезновением текста.
+
+  /* Дополнительные маркетинговые тексты для всех остальных экранов */
+  const diagIntroText = [
+    'Компьютерная диагностика здесь — это быстрый структурированный опрос ключевых электронных систем автомобиля без навязчивых терминов.',
+    'Мы опрашиваем двигатель, трансмиссию, системы безопасности, ABS, кузовную электронику и вспомогательные модули, формируя чистую картину состояния.',
+    'Каждый код сразу классифицируется по уровню влияния: критично, важно или информационно — вы не теряетесь в списке буквенно-цифровых комбинаций.',
+    'Если серьёзных неисправностей нет — вы получаете приятное подтверждение исправности, укрепляющее уверенность перед продажей или дальнейшей эксплуатацией.',
+    'Процесс автоматизирован: подключили — дождались завершения — получили результат. Никаких ручных команд.',
+    'Готовы начать? Нажмите «Начать подключение» — адаптер определится и сканирование запустится само.'
+  ];
+
+  const paymentInfoText = [
+    'Перед оплатой сводная информация позволяет перепроверить услугу, тип кузова и контакты — прозрачность без скрытых доплат.',
+    'Оплата через QR идёт по защищённому каналу: вы используете привычное банковское приложение — мы не видим и не сохраняем платёжных данных.',
+    'После подтверждения транзакции система моментально активирует измерительный сценарий: никакого «ожидания активации» или ручных подтверждений.',
+    'Если что-то пойдёт не так (редко, но бывает), вы сможете повторить попытку — интерфейс подскажет шаги.'
+  ];
+
+  const measureInfoText = [
+    'Мы подготавливаем последовательность точек измерения — алгоритм распределяет их по панелям так, чтобы выявить локальные аномалии.',
+    'Прогресс отражает реальное число завершённых точек — никаких искусственных задержек: всё честно и прозрачно.',
+    'Измерительные данные буферизуются и проверяются на выбросы, чтобы случайное касание не исказило итоговых средних значений.',
+    'Как только цикл завершится — откроются промежуточные результаты и кнопка генерации полного отчёта.'
+  ];
+
+  const diagResultsInfoText = [
+    'Ниже собраны найденные коды. Таблица формируется с краткой расшифровкой и цветовой маркировкой приоритета — визуально считывается за секунды.',
+    'Красный (критично) — требует скорого вмешательства, жёлтый (важно) — планово устранить, зелёный — система отвечает корректно, серый — информационные состояния.',
+    'Рекомендации под таблицей агрегируют практичные первые шаги: что осмотреть или какие узлы проверить в первую очередь.',
+    'Полученный отчёт можно использовать при переговорах, подготовке к сервису или как контрольную точку перед покупкой.'
+  ];
+
+  const thicknessResultsInfoText = [
+    'Сводная таблица группирует элементы кузова: фактическое измерение, диапазон типовой заводской нормы и статус отклонения.',
+    'Отклонение не всегда критично: жёлтые зоны могут означать локальный перекрас без структурных нарушений — повод уточнить историю, но не обязательный отказ.',
+    'Сильные превышения или разнотолщинность по соседним панелям (оранжево‑красные состояния) повышают вероятность шпаклёвки и скрытого ремонта.',
+    'Кнопка «Получить подробный отчет» сформирует структурированный файл с расширенными данными для архива или аргументации.'
+  ];
+
+  const thankyouText = [
+    'Благодарим за использование терминала — ваш отчёт успешно отправлен на указанные контакты.',
+    'Мы надеемся, что полученные данные помогли почувствовать спокойную уверенность в техническом и визуальном состоянии автомобиля.',
+    'Если впереди ещё один осмотр или сравнение нескольких машин — возвращайтесь: повторные процедуры проходят ещё быстрее.',
+    'Через несколько секунд произойдёт автоматический возврат на стартовый экран — можете начать новый сценарий в любой момент.'
+  ];
+
+  // Отложенное заполнение некоторых блоков при показе соответствующих страниц
+  const _filled = {};
+  function ensureBlock(id, textArray){
+    if(_filled[id]) return;
+    const el=document.getElementById(id); if(!el) return;
+    populateRichText(el, textArray);
+    _filled[id]=true;
+  }
+
+  // Немедленно заполняем статические блоки, которые нужны заранее
+  ensureBlock('paymentInfo', paymentInfoText);
+  ensureBlock('measureInfo', measureInfoText);
+  ensureBlock('thicknessResultsInfo', thicknessResultsInfoText);
+  ensureBlock('thankyouInfo', thankyouText);
+
+  // Диагностические блоки наполняем по завершению действий
+  // diagIntro уже наполняется в buildDiagnosticIntro
+  function fillDiagResultsInfo(){ ensureBlock('diagResultsInfo', diagResultsInfoText); }
+
+  /* Tariff selection (простая сетка) */
+  let tariff=null; let price=0;
+  document.getElementById('tariffGrid').addEventListener('click',e=>{
+    const t=e.target.closest('.tariff'); if(!t)return;
+    document.querySelectorAll('.tariff').forEach(el=>el.classList.remove('is-selected'));
+    t.classList.add('is-selected'); tariff=t.dataset.tariff;
+    price = tariff==='minivan'?350:300;
+    showCarVisual(tariff); // обновляем визуализацию
+    validateContactState();
+  });
+
+  /* Contacts validation */
+  const phoneInput=document.getElementById('phoneInput');
+  const emailInput=document.getElementById('emailInput');
+  const btnToPayment=document.getElementById('btnToPayment');
+  const phoneMsg=document.getElementById('phoneMsg');
+  const emailMsg=document.getElementById('emailMsg');
+  const phoneRe=/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // Улучшенное форматирование телефона (исключает повтор "7" внутри скобок, поддержка ввода с 7/8/9)
+  function formatPhone(raw){
+    const digits = raw.replace(/\D/g,'');
+    if(!digits) return '+7 ('; // пустой ввод
+    // Отбрасываем ведущий национальный префикс 7 или 8, если пользователь ввёл
+    let rest = digits;
+    if(rest[0]==='7' || rest[0]==='8') rest = rest.slice(1);
+    rest = rest.slice(0,10); // максимум 10 оставшихся цифр
+    let out = '+7 (';
+    const len = rest.length;
+    if(len>=1){ out += rest.substring(0, Math.min(3,len)); }
+    if(len>=3){ out += ') '; }
+    if(len>3){ out += rest.substring(3, Math.min(6,len)); }
+    if(len>=6){ out += '-'; }
+    if(len>6){ out += rest.substring(6, Math.min(8,len)); }
+    if(len>=8){ out += '-'; }
+    if(len>8){ out += rest.substring(8, Math.min(10,len)); }
+    return out.trimEnd();
+  }
+
+  phoneInput.addEventListener('input',()=>{ phoneInput.value=formatPhone(phoneInput.value); validateContactState(); });
+  emailInput.addEventListener('input',()=>{ validateContactState(); });
+
+  function validateContactState(){
+    const phoneValid= phoneRe.test(phoneInput.value);
+    const emailValid= emailRe.test(emailInput.value);
+    phoneInput.classList.toggle('is-valid',phoneValid); phoneInput.classList.toggle('is-error',!phoneValid && phoneInput.value.length>5);
+    emailInput.classList.toggle('is-valid',emailValid); emailInput.classList.toggle('is-error',!emailValid && emailInput.value.length>3);
+    phoneMsg.textContent = phoneValid? '' : (phoneInput.value? 'Формат: +7 (XXX) XXX-XX-XX' : '');
+    emailMsg.textContent = emailValid? '' : (emailInput.value? 'Проверьте email' : '');
+    btnToPayment.disabled= !(tariff && phoneValid && emailValid);
+  }
+
+  document.getElementById('btnBackToServices').addEventListener('click',()=> show('services'));
+  btnToPayment.addEventListener('click',()=>{ buildOrderSummary(); show('payment'); simulateQR(); });
+
+  function buildOrderSummary(){
+    const box=document.getElementById('orderSummary'); box.innerHTML='';
+    const data=[ ['Услуга','Толщиномер'], ['Тариф', tariff? tariff.toUpperCase():'' ], ['Контакты', phoneInput.value + ', ' + emailInput.value], ['Стоимость', price+' ₽'] ];
+    data.forEach(r=>{ const row=document.createElement('div'); row.className='summary__row'; row.innerHTML='<span>'+r[0]+'</span><span>'+r[1]+'</span>'; box.appendChild(row); });
+  }
+
+  /* Simulate QR generation + payment status */
+  let paymentTimer=null;
+  function simulateQR(){
+    const qr=document.getElementById('qrBox'); const st=document.getElementById('paymentStatus');
+    qr.classList.add('qr-box--loading'); st.dataset.state='waiting'; st.textContent='⏳ Ожидание оплаты через QR-код';
+    setTimeout(()=>{ qr.classList.remove('qr-box--loading'); qr.textContent='[ QR CODE ]'; st.textContent='⏳ Ожидание оплаты через QR-код';
+      paymentTimer=setTimeout(()=>{ st.dataset.state='success'; st.textContent='✅ Оплата успешно завершена'; notify('success','Оплата принята');
+        // Переходим на страницу подготовки и быстро стартуем измерения
+        show('measure');
+        setTimeout(()=>startMeasurement(),600);
+      }, 4000);
+    },1400);
+  }
+
+  // (Удалена функция measurePrepTransition после отката эффекта)
+
+  /* Measurement simulation */
+  const measureBar=document.getElementById('measureProgress');
+  const measureLabel=document.getElementById('measureLabel');
+  const TOTAL_POINTS = tariff==='minivan'?12:9; // simple assumption
+  function startMeasurement(){ let i=0; const total = tariff==='minivan'?12:9; function step(){ i++; const pct=Math.round(i/total*100); measureBar.style.width=pct+'%'; measureLabel.textContent='Измерение '+i+' / '+total; if(i<total){ setTimeout(step,350); } else { setTimeout(()=>{ buildResults(); show('results'); },800);} } step(); }
+
+  /* Build sample results */
+  const resultsBody=document.querySelector('#resultsTable tbody');
+  const resultsHighlights=document.getElementById('resultsHighlights');
+  const resultsBadge=document.getElementById('resultsBadge');
+  function buildResults(){
+    resultsBody.innerHTML='';
+    const sample=[
+      {part:'Капот', value:'125 мкм', norm:'120-140 мкм', status:'ok'},
+      {part:'Левая дверь', value:'98 мкм', norm:'120-140 мкм', status:'warn'},
+      {part:'Правая дверь', value:'156 мкм', norm:'120-140 мкм', status:'warn'}
+    ];
+    const statusMap={ok:'status-chip status-chip--ok',warn:'status-chip status-chip--warn',err:'status-chip status-chip--err'};
+    const stateLabels={ok:'Норма',warn:'Отклонение',err:'Ошибка'};
+    const stats=sample.reduce((acc,item)=>{ acc[item.status]=(acc[item.status]||0)+1; acc.total++; return acc; },{ok:0,warn:0,err:0,total:0});
+    sample.forEach((row,idx)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td>'+row.part+'</td><td>'+row.value+'</td><td>'+row.norm+'</td><td><span class="'+statusMap[row.status]+'">'+(stateLabels[row.status]||'Статус')+'</span></td>';
+      tr.style.setProperty('--row-index', idx);
+      resultsBody.appendChild(tr);
+    });
+    renderResultHighlights(sample, stats);
+    updateResultsBadge(stats);
+  }
+
+  function renderResultHighlights(rows, stats){
+    if(!resultsHighlights) return;
+    resultsHighlights.innerHTML='';
+    const cards=[
+      {label:'Зелёных зон', value:stats.ok, tone:'ok', hint:'Элементы, соответствующие заводской норме.'},
+      {label:'Требует внимания', value:stats.warn, tone:'warn', hint:'Панели с лёгкими отклонениями — повод уточнить историю.'},
+      {label:'Всего точек', value:stats.total, tone:'total', hint:'Количество измерений в текущей сессии.'}
+    ];
+    cards.forEach((card,i)=>{
+      const div=document.createElement('div');
+      div.className='result-card result-card--'+card.tone;
+      div.innerHTML='<span class="result-card__label">'+card.label+'</span><span class="result-card__value">'+card.value+'</span><span class="result-card__hint">'+card.hint+'</span>';
+      div.style.setProperty('--i', i);
+      resultsHighlights.appendChild(div);
+    });
+  }
+
+  function updateResultsBadge(stats){
+    if(!resultsBadge) return;
+    let text='Стабильное состояние';
+    let badgeState='neutral';
+    if(stats.warn>0 && stats.warn>=stats.ok){ text='Нужен дополнительный осмотр'; badgeState='warn'; }
+    else if(stats.ok>0 && stats.warn===0){ text='Лакокраска без отклонений'; badgeState='ok'; }
+    else if(stats.warn>0){ text='Есть зоны внимания'; badgeState='warn'; }
+    resultsBadge.textContent=text;
+    resultsBadge.dataset.state=badgeState;
+  }
+
+  /* Report button */
+  const btnReport=document.getElementById('btnReport');
+  btnReport.addEventListener('click',()=>{ if(btnReport.classList.contains('is-loading')) return; btnReport.classList.add('is-loading'); btnReport.textContent='Генерация отчета...'; setTimeout(()=>{ btnReport.classList.remove('is-loading'); btnReport.textContent='Отчет отправлен'; notify('success','Отчет отправлен на Email'); setTimeout(()=>{ show('thankyou'); startCountdown(); },1600); },2200); });
+
+  /* Countdown */
+  function startCountdown(){ const wrap=document.getElementById('countdown'); wrap.innerHTML='<svg><circle cx="27" cy="27" r="24" stroke="#e2e8f0" stroke-width="4" fill="none"/><circle id="cdCircle" cx="27" cy="27" r="24" stroke="#3b82f6" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="'+(2*Math.PI*24)+'" stroke-dashoffset="0"/></svg><div class="countdown__num" id="cdNum"></div>'; const circle=document.getElementById('cdCircle'); const num=document.getElementById('cdNum'); const total=10; let t=total; const length=2*Math.PI*24; function tick(){ const ratio=t/total; circle.style.strokeDashoffset= length - length*ratio; num.textContent=t; if(t===0){ show('idle'); } else { t--; setTimeout(tick,1000);} } tick(); }
+
+  /* Notifications */
+  const stack=document.getElementById('noticeStack');
+  function notify(type,msg){ const div=document.createElement('div'); div.className='notice notice--'+type; div.textContent=msg; stack.appendChild(div); setTimeout(()=>{ div.style.opacity='0'; setTimeout(()=>div.remove(),400); }, 4000); }
+
+  /* Car visual simple show */
+  const carVisual = document.getElementById('carVisual');
+  function showCarVisual(code){
+    if(!carVisual) return;
+    carVisual.querySelectorAll('.car-visual__item').forEach(item=>{
+      const active=item.dataset.car===code; item.hidden=!active; if(active){
+        item.classList.remove('just-shown');
+        void item.offsetWidth; // reflow for transition restart
+        item.classList.add('just-shown');
+      }
+    });
+  }
+
+  </script>
+</body>
+</html>
